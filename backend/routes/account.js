@@ -24,7 +24,6 @@ accountRouter.post("/transfer",authMiddleware,async (req, res) => {
 
     try{
         session.startTransaction();
-    
         const {success}=tranferZod.safeParse(req.body);
         if(!success){
             res.status(400).json({
