@@ -14,23 +14,11 @@ accountRouter.get("/balance",authMiddleware,async (req, res) => {
     })
 })
 
-const tranferZod=zod.object({
-    to:zod.string(),
-    amount:zod.number()
-})
 
 accountRouter.post("/transfer",authMiddleware,async (req, res) => {
     const session = await mongoose.startSession();
-
     try{
         session.startTransaction();
-        const {success}=tranferZod.safeParse(req.body);
-        if(!success){
-            res.status(400).json({
-                message: "Invalid inputs"
-            });
-            return;
-        }
         const receiver=await Account.findOne({
             userId:req.body.to
         });
@@ -75,7 +63,7 @@ accountRouter.post("/transfer",authMiddleware,async (req, res) => {
         await session.abortTransaction()
         session.endSession()
         console.log(err)
-        res.send('Error');
+        res.status(500).send('Error');
         return;
     }
 })

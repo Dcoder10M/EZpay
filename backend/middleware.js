@@ -2,10 +2,11 @@ const jwt=require('jsonwebtoken');
 const { JWT_SECRET } = require('./config');
 
 function authMiddleware(req,res,next) {
-    // console.log(req.headers);
+    // console.log(req.headers.token);
     const header=req.headers.token;
     if (!header || !header.startsWith('Bearer ')) {
-        return res.status(403).json({});
+        res.status(403).json({});
+        return;
     }
     const tokenArray=header.split(' ');
     try{
